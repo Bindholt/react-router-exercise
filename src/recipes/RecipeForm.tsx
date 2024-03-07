@@ -2,6 +2,7 @@ import "./RecipeForm.css";
 import { useEffect, useState } from "react";
 import { getCategories, addRecipe, deleteRecipe, Recipe } from "../services/apiFacade";
 import { useLocation } from "react-router-dom";
+import React from "react";
 
 const EMPTY_RECIPE = {
   id: null,
@@ -12,6 +13,7 @@ const EMPTY_RECIPE = {
   youTube: "",
   ingredients: "",
   source: "",
+  owner: "",
 };
 
 export default function RecipeForm() {
@@ -24,6 +26,13 @@ export default function RecipeForm() {
     getCategories().then((res) => setCategories(res));
   }, []);
 
+  useEffect(() => {
+    if(!recipeToEdit) {
+      formData.owner = localStorage.getItem("username") || "";
+    }
+    
+  }, [recipeToEdit]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -31,6 +40,7 @@ export default function RecipeForm() {
       [name]: value,
     }));
   };
+
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (formData.id) {
@@ -41,8 +51,10 @@ export default function RecipeForm() {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
+      console.log("we get this far");
       const newRecipe = await addRecipe(formData);
       alert("New recipe added")
+      setFormData(newRecipe);
       console.info("New/Edited Recipe", newRecipe);
   };
 

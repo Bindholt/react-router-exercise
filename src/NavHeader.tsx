@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import AuthStatus from "./security/AuthStatus";
 import { useAuth } from "./security/AuthProvider";
+import React from "react";
 
 export default function NavHeader() {
   const auth = useAuth();
@@ -22,8 +23,14 @@ export default function NavHeader() {
         {auth.isLoggedIn() && (
           <li>
             {/* <a href="/add">Add</a> */}
-            <NavLink to="/add">Add</NavLink>
+            <NavLink to="/add">Add Recipe</NavLink>
           </li>
+        )}
+        {auth.isLoggedInAs(["ADMIN"]) && (
+          <li>
+            <NavLink to="/addcategory">Add Category</NavLink>
+          </li>
+          
         )}
         <AuthStatus />
       </ul>

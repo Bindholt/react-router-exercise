@@ -1,6 +1,7 @@
 import { createContext, useState, ReactNode } from "react";
-import { fakeAuthProvider, User } from "../services/authFacade";
+import { authProvider, User } from "../services/authFacade";
 import { useContext } from "react";
+import React from "react";
 import { LoginResponse, LoginRequest } from "../services/authFacade";
 
 
@@ -22,7 +23,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [username, setUsername] = useState<string | null>(initialUsername);
  
   const signIn = async (user_: LoginRequest) => {
-    return fakeAuthProvider.signIn(user_).then((user) => {
+    return authProvider.signIn(user_).then((user) => {
       setUsername(user.username)
       localStorage.setItem("username",user.username)
       localStorage.setItem("roles",JSON.stringify(user.roles))
@@ -39,7 +40,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.removeItem("username");
       localStorage.removeItem("roles");
   };
-
 
   function isLoggedIn() {
     return username != null;
